@@ -1,0 +1,16 @@
+com\irm\guessthenumber\data\RoundDatabaseDao.class
+com\irm\guessthenumber\data\GameInMemoryDao.class
+com\irm\guessthenumber\data\RoundDatabaseDao$RoundMapper.class
+com\irm\guessthenumber\App.class
+com\irm\guessthenumber\controllers\Error.class
+com\irm\guessthenumber\data\GameDatabaseDao.class
+com\irm\guessthenumber\controllers\GuessTheNumberController.class
+com\irm\guessthenumber\data\GameDao.class
+com\irm\guessthenumber\service\GuessTheNumberServiceLayer.class
+com\irm\guessthenumber\data\RoundDao.class
+com\irm\guessthenumber\data\GameDatabaseDao$GameMapper.class
+com\irm\guessthenumber\models\Round.class
+com\irm\guessthenumber\TestApplicationConfiguration.class
+com\irm\guessthenumber\service\GuessTheNumberServiceLayerImpl.class
+com\irm\guessthenumber\controllers\GuessTheNumberControllerExceptionHandler.class
+com\irm\guessthenumber\models\Game.class

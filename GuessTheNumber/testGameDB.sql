@@ -1,0 +1,21 @@
+DROP DATABASE IF EXISTS testGameDB;
+CREATE DATABASE testGameDB;
+
+USE testGameDB;
+
+CREATE TABLE Game (
+	GameId INT PRIMARY KEY AUTO_INCREMENT,
+    Answer VARCHAR(4) NOT NULL,
+    Finished BOOLEAN DEFAULT false
+);
+
+CREATE TABLE Round (
+	RoundId INT PRIMARY KEY AUTO_INCREMENT,
+	GameId INT NOT NULL,
+    GuessTime DATETIME,
+    Guess VARCHAR(4) NOT NULL,
+    Result VARCHAR(10),
+    FOREIGN KEY fk_Round_Game(GameId)
+		REFERENCES Game(GameId)
+);
+    
