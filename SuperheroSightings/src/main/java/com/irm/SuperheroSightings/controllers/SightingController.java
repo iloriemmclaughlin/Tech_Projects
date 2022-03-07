@@ -77,8 +77,10 @@ public class SightingController {
   
     @GetMapping("sightingsDate")
     public String searchSightingsByDate(Model model) {
+        Sighting sighting = new Sighting();
         List<Sighting> sightings = sightingDao.getAllSightings();
         model.addAttribute("sightings", sightings);
+        model.addAttribute("sighting", sighting);
         return "sightingsDate";
     }
     
@@ -86,6 +88,7 @@ public class SightingController {
     public String displaySightingsByDate(Sighting sighting, Model model) {
         List<Sighting> sightings = sightingDao.getSightingsByDate(sighting.getDate());
         model.addAttribute("sightings", sightings);
+        model.addAttribute("sighting", sighting);
         return "viewSightingsByDate";
     }
     
@@ -220,7 +223,30 @@ public class SightingController {
     }
     
     @PostMapping("viewSightingsByDate")
-    public String performSightingsByDate(Sighting sighting, HttpServletRequest request, Model model) {
+    public String performSightingsByDate(@Valid Sighting sighting, BindingResult result, HttpServletRequest request, Model model) throws ParseException {
+        LocalDate ld = LocalDate.now().plusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(("yyyy-MM-dd"));
+        String formatted = ld.format(formatter);
+        sighting.setDate(request.getParameter("date"));
+        String sightingDate = sighting.getDate();
+        if(!sightingDate.isBlank() || !sightingDate.isEmpty()) {
+            Date theSightingDate = new SimpleDateFormat("yyyy-MM-dd").parse(sightingDate);
+            Date tomorrow = new SimpleDateFormat("yyyy-MM-dd").parse(formatted);
+            Boolean compare1 = sightingDate.equalsIgnoreCase(formatted);
+            Boolean compare2 = theSightingDate.after(tomorrow);
+            if (compare1 == true || compare2 == true) {
+                FieldError error = new FieldError("sighting", "date", "Date cannot be in the future.");
+                result.addError(error);
+            }
+        }
+        
+        if(result.hasErrors()) {
+            model.addAttribute("superheros", superheroDao.getAllSuperheros());
+            model.addAttribute("locations", locationDao.getAllLocations());
+            model.addAttribute("sighting", sighting);
+            return "viewSightingsByDate";
+        }
+        
         List<Sighting> sightings = sightingDao.getSightingsByDate(request.getParameter("date"));
         model.addAttribute("sightings", sightings);
         return "viewSightingsByDate";

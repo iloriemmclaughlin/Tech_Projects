@@ -94,14 +94,6 @@ public class OrganizationDaoDB implements OrganizationDao {
         final String DELETE_ORGANIZATION = "DELETE FROM organization WHERE id = ?";
         jdbc.update(DELETE_ORGANIZATION, id);
     }
-
-    @Override
-    public List<Organization> getOrganizationsForSuperhero(Superhero superhero) {
-        final String SELECT_ORGANIZATIONS_FOR_SUPERHERO = "SELECT o.* FROM organization JOIN "
-                + "organization_superhero os ON os.organizationId = o.id WHERE os.superheroId = ?";
-        List<Organization> organizations = jdbc.query(SELECT_ORGANIZATIONS_FOR_SUPERHERO, new OrganizationMapper(), superhero.getId());
-        return organizations;
-    }
     
     public List<Superhero> getSuperherosForOrganization(Organization organization) {
         final String SELECT_SUPERHEROS_FOR_ORGANIZATION = "SELECT s.* FROM superhero s JOIN "

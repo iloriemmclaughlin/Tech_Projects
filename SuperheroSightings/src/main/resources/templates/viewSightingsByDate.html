@@ -55,6 +55,11 @@ and open the template in the editor.
                             Date</label>
                         <div class="col-9">
                             <input type="date" name="date" id="date" class="form-control"/>
+                            <div th:if="${#fields.hasErrors('sighting.date')}">
+                                <p th:each="error : ${#fields.errors('sighting.date')}"
+                                   class="alert alert-danger" th:text="${error}">
+                                    Bad Date</p>
+                            </div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Get Sightings</button>
