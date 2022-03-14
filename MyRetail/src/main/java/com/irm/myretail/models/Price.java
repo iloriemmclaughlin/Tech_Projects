@@ -25,7 +25,7 @@ public class Price {
     public void setValue(String value) {
         this.value = value;
     }
-
+    
     public String getCurrencyCode() {
         return currencyCode;
     }
@@ -33,7 +33,5 @@ public class Price {
     public void setCurrencyCode(String currencyCode) {
         this.currencyCode = currencyCode;
     }
-    
-    
-
+   
 }

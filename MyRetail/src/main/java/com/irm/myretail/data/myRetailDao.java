@@ -20,8 +20,8 @@ public interface myRetailDao {
     
     Product findById(int id);
     
-    Product findName(int id);
+    String findProductName(int id);
     
-    Boolean update(Product product);
+    void update(Product product);
 
 }

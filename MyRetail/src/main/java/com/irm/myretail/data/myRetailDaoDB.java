@@ -6,9 +6,11 @@
 
 package com.irm.myretail.data;
 
+import com.irm.myretail.models.Price;
 import com.irm.myretail.models.Product;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -33,23 +35,49 @@ public class myRetailDaoDB implements myRetailDao {
 
     @Override
     public Product findById(int id) {
-        final String sql = "SELECT id, name, price, currency "
-                + "FROM product WHERE id = ?;";
-        
-        return jdbcTemplate.queryForObject(sql, new ProductMapper(), id);
+        final String sql = "SELECT * FROM product WHERE id = ?;";
+        Product product = jdbcTemplate.queryForObject(sql, new ProductMapper(), id);
+        product.setPrice(getPriceForProduct(id));
+        return product;
+    }
+    
+    private Price getPriceForProduct(int id) {
+        final String sql = "SELECT c.*, p.value FROM currency c "
+                + "JOIN product_currency pc ON pc.currencyId = c.id "
+                + "JOIN product p ON pc.productId = p.id WHERE pc.currencyId = 1 AND pc.productId = ?;";
+        return jdbcTemplate.queryForObject(sql, new PriceMapper(), id);
     }
 
     @Override
-    public Product findName(int id) {
-        final String sql = "SELECT name FROM product WHERE id = ?;";
-        return jdbcTemplate.queryForObject(sql, new ProductMapper(), id);
+    public String findProductName(int id) {
+        final String sql = "SELECT * FROM product WHERE id = ?;";
+        Product product = jdbcTemplate.queryForObject(sql, new ProductMapper(), id);
+        product.setPrice(getPriceForProduct(id));
+        String result = product.getName();
+        return result;
     }
 
     @Override
-    public Boolean update(Product product) {
-        final String sql = "UPDATE product SET price = ? WHERE id = ?;";
-        
-        return jdbcTemplate.update(sql, product.getPrice(), product.getId()) > 0;
+    public void update(Product product) {
+        final String sql = "UPDATE product SET "
+                + "value = ? "
+                + "WHERE id = ?;";
+        jdbcTemplate.update(sql, product.getPrice(), product.getId());
+    }
+    
+    private void updateProduct() {
+        final String sql = "INSERT INTO product (value) VALUES(?);";
+        List<Product> products = getAllProducts();
+        for (Product product : products) {
+            jdbcTemplate.update(sql,
+                    product.getPrice().getValue());
+        }
+    }
+    
+    private List<Product> getAllProducts() {
+        final String sql = "SELECT * FROM product";
+        List<Product> products = jdbcTemplate.query(sql, new ProductMapper());
+        return products;
     }
     
     private static final class ProductMapper implements RowMapper<Product> {
@@ -59,9 +87,18 @@ public class myRetailDaoDB implements myRetailDao {
             Product product = new Product();
             product.setId(rs.getInt("id"));
             product.setName(rs.getString("name"));
-            product.setPrice(rs.getString("price"));
-            product.setCurrency(rs.getString("currency"));
             return product;
+        }
+    }
+    
+    private static final class PriceMapper implements RowMapper<Price> {
+        
+        @Override
+        public Price mapRow(ResultSet rs, int index) throws SQLException {
+            Price price = new Price();
+            price.setValue(rs.getString("value"));
+            price.setCurrencyCode(rs.getString("code"));
+            return price;
         }
     }
 

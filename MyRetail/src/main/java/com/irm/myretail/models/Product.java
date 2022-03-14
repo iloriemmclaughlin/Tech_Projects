@@ -18,8 +18,17 @@ public class Product {
     
     private int id;
     private String name;
-    private String price;
-    private String currency;
+    private Price price;
+    
+    public Product() {
+        
+    }
+    
+    public Product(int id, String name, Price price) {
+        setId(id);
+        setName(name);
+        setPrice(price);
+    }
 
     public int getId() {
         return id;
@@ -37,23 +46,12 @@ public class Product {
         this.name = name;
     }
 
-    public String getPrice() {
+    public Price getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Price price) {
         this.price = price;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
+    }  
     
-    
-    
-
 }
