@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.irm.myretail.exceptions;
+package com.irm.myretail.controllers;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -36,7 +36,7 @@ public class myRetailControllerExceptionHandler extends ResponseEntityExceptionH
         
         Error err = new Error();
         err.setMessage(CONSTRAINT_MESSAGE);
-        return new ResponseEntity<>(err, HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
         
     }
 

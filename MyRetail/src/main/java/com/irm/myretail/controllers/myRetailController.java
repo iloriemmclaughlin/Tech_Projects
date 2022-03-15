@@ -52,7 +52,6 @@ public class myRetailController {
         if (result == null) {
             return new ResponseEntity(null, HttpStatus.NOT_FOUND);
         }
-        
         return ResponseEntity.ok(result);
     }
     
@@ -77,17 +76,6 @@ public class myRetailController {
         return response;
     }
     
-    /*@PutMapping("/products/{id}")
-    public ResponseEntity update(@PathVariable int id, @RequestBody Product product) {
-        ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
-        if (id != product.getId()) {
-            response = new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
-        } else if (dao.update(product)) {
-            response = new ResponseEntity(HttpStatus.NO_CONTENT);
-        }
-        return response;
-    }*/
-    
     // Getting project from external API
     @GetMapping(value = "/product")
     public Product getProduct() {
@@ -110,6 +98,15 @@ public class myRetailController {
         String uri = "http://localhost:8080/api/myRetail/product";
         RestTemplate restTemplate = new RestTemplate();
         Product result = restTemplate.getForObject(uri, Product.class);
+        return result;
+    }
+    
+    @GetMapping(value = "/getproductname")
+    private String getProductName() {
+        String uri = "http://localhost:8080/api/myRetail/product";
+        RestTemplate restTemplate = new RestTemplate();
+        Product product = restTemplate.getForObject(uri, Product.class);
+        String result = product.getName();
         return result;
     }
 

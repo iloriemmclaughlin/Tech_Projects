@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.irm.myretail.exceptions;
+package com.irm.myretail.controllers;
 
 import java.time.LocalDateTime;
 

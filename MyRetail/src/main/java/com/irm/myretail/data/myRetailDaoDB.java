@@ -59,25 +59,11 @@ public class myRetailDaoDB implements myRetailDao {
 
     @Override
     public void update(Product product) {
+        Price price = product.getPrice();
         final String sql = "UPDATE product SET "
                 + "value = ? "
                 + "WHERE id = ?;";
-        jdbcTemplate.update(sql, product.getPrice(), product.getId());
-    }
-    
-    private void updateProduct() {
-        final String sql = "INSERT INTO product (value) VALUES(?);";
-        List<Product> products = getAllProducts();
-        for (Product product : products) {
-            jdbcTemplate.update(sql,
-                    product.getPrice().getValue());
-        }
-    }
-    
-    private List<Product> getAllProducts() {
-        final String sql = "SELECT * FROM product";
-        List<Product> products = jdbcTemplate.query(sql, new ProductMapper());
-        return products;
+        jdbcTemplate.update(sql, price.getValue(), product.getId());
     }
     
     private static final class ProductMapper implements RowMapper<Product> {
