@@ -10,6 +10,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.irm.myretail.data.myRetailDao;
 import com.irm.myretail.models.Price;
 import com.irm.myretail.models.Product;
+import com.irm.myretail.exceptions.ProductNotFoundException;
+import com.irm.myretail.service.myRetailServiceLayer;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -21,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,18 +44,21 @@ import org.springframework.web.client.RestTemplate;
 public class myRetailController {
     
     private final myRetailDao dao;
+    private final myRetailServiceLayer service;
     
-    public myRetailController(myRetailDao dao) {
+    @Autowired
+    public myRetailController(myRetailDao dao, myRetailServiceLayer service) {
         this.dao = dao;
+        this.service = service;
     }
     
     @GetMapping("/products/{id}")
-    public ResponseEntity<Product> findById(@PathVariable int id) {
-        Product result = dao.findById(id);
-        if (result == null) {
-            return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+    public ResponseEntity findById(@PathVariable int id) {
+        try {
+            return new ResponseEntity(service.findById(id), HttpStatus.OK);
+        } catch(ProductNotFoundException ex) {
+            return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(result);
     }
     
     @GetMapping("/products/name/{id}")

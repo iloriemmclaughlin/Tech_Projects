@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 
-package com.irm.myretail.controllers;
+package com.irm.myretail.exceptions;
 
+import com.irm.myretail.exceptions.ProductNotFoundException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -24,20 +26,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 @RestController
-public class myRetailControllerExceptionHandler extends ResponseEntityExceptionHandler {
+public class myRetailGlobalExceptionHandler extends ResponseEntityExceptionHandler {
     
-    private static final String CONSTRAINT_MESSAGE = "Could not find your item. "
-            + "Please ensure it is valid and try again.";
-    
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public final ResponseEntity<Error> handleSqlException(
-            SQLIntegrityConstraintViolationException ex,
-            WebRequest request) {
-        
-        Error err = new Error();
-        err.setMessage(CONSTRAINT_MESSAGE);
-        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
-        
+    @ExceptionHandler(ProductNotFoundException.class)
+    public final ResponseEntity<Error> handleProductNotFoundException(ProductNotFoundException ex, WebRequest request) {
+        Error error = new Error(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
 }

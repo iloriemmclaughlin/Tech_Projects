@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.irm.myretail.data;
 
 import com.irm.myretail.models.Price;
@@ -12,22 +11,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 /**
- *@author Iloriem McLaughlin
- *email: iloriem.pena@gmail.com
- *date: 3/12/2022
- *purpose: Target Interview Code Review
+ * @author Iloriem McLaughlin email: iloriem.pena@gmail.com date: 3/12/2022
+ * purpose: Target Interview Code Review
  */
-
 @Repository
 public class myRetailDaoDB implements myRetailDao {
-    
+
     private final JdbcTemplate jdbcTemplate;
-    
+
     @Autowired
     public myRetailDaoDB(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -36,11 +33,16 @@ public class myRetailDaoDB implements myRetailDao {
     @Override
     public Product findById(int id) {
         final String sql = "SELECT * FROM product WHERE id = ?;";
-        Product product = jdbcTemplate.queryForObject(sql, new ProductMapper(), id);
-        product.setPrice(getPriceForProduct(id));
-        return product;
+        try {
+            Product product = jdbcTemplate.queryForObject(sql, new ProductMapper(), id);
+            product.setPrice(getPriceForProduct(id));
+            return product;
+        } catch(EmptyResultDataAccessException ex) {
+            return null;
+        }
+
     }
-    
+
     private Price getPriceForProduct(int id) {
         final String sql = "SELECT c.*, p.value FROM currency c "
                 + "JOIN product_currency pc ON pc.currencyId = c.id "
@@ -65,9 +67,9 @@ public class myRetailDaoDB implements myRetailDao {
                 + "WHERE id = ?;";
         jdbcTemplate.update(sql, price.getValue(), product.getId());
     }
-    
+
     private static final class ProductMapper implements RowMapper<Product> {
-        
+
         @Override
         public Product mapRow(ResultSet rs, int index) throws SQLException {
             Product product = new Product();
@@ -76,9 +78,9 @@ public class myRetailDaoDB implements myRetailDao {
             return product;
         }
     }
-    
+
     private static final class PriceMapper implements RowMapper<Price> {
-        
+
         @Override
         public Price mapRow(ResultSet rs, int index) throws SQLException {
             Price price = new Price();

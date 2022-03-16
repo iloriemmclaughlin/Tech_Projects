@@ -4,22 +4,28 @@
  * and open the template in the editor.
  */
 
-package com.irm.myretail.controllers;
+package com.irm.myretail.exceptions;
 
 import java.time.LocalDateTime;
 
 /**
  *@author Iloriem McLaughlin
  *email: iloriem.pena@gmail.com
- *date: 3/12/2022
- *purpose: Target Interview Code Review
+ *date: 
+ *purpose: 
  */
 
-
 public class Error {
-    
     private LocalDateTime timestamp = LocalDateTime.now();
     private String message;
+    private String details;
+    
+    public Error(LocalDateTime timestamp, String message, String details) {
+        super();
+        this.timestamp = timestamp;
+        this.message = message;
+        this.details = details;
+    }
     
     public LocalDateTime getTimestamp() {
         return timestamp;
@@ -36,5 +42,15 @@ public class Error {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+    
+    
 
 }
