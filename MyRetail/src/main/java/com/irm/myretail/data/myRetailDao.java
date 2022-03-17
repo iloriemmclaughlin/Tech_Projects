@@ -6,7 +6,8 @@
 
 package com.irm.myretail.data;
 
-import com.irm.myretail.models.Product;
+import com.irm.myretail.entities.Product;
+import java.util.List;
 
 /**
  *@author Iloriem McLaughlin
@@ -18,10 +19,53 @@ import com.irm.myretail.models.Product;
 
 public interface myRetailDao {
     
+    /**
+     * Returns the product object associated with the given product id.
+     * Returns null if no such product exists.
+     * 
+     * @param id id of the product to retrieve
+     * @return  the Product object associated with the given product id,
+     * null if it does not exist.
+     */
     Product findById(int id);
     
+    /**
+     * Returns the name of product associated with the given product id.
+     * Returns null if no such product exists.
+     * 
+     * @param id id of the product name to retrieve
+     * @return the product name associated with the given product id,
+     * null if it does not exist.
+     */
     String findProductName(int id);
     
+    /**
+     * Updates product information in the database
+     * 
+     * @param product updates product price with associated id information
+     */
     void update(Product product);
+    
+    /**
+     * Adds given product in the database
+     * 
+     * @param product product to be added to the database
+     * @return the Product object
+     */
+    Product addProduct(Product product);
+    
+    /**
+     * Returns list of all products from the database
+     * 
+     * @return list of all products from the database
+     */
+    List<Product> getAllProducts();
+    
+    /**
+     * Deletes product from database
+     * 
+     * @param id deletes product with associated id from the database
+     */
+    void deleteProduct(int id);
 
 }

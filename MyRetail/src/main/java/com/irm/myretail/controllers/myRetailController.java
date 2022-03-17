@@ -8,12 +8,13 @@ package com.irm.myretail.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.irm.myretail.data.myRetailDao;
-import com.irm.myretail.models.Price;
-import com.irm.myretail.models.Product;
+import com.irm.myretail.entities.Price;
+import com.irm.myretail.entities.Product;
 import com.irm.myretail.exceptions.ProductNotFoundException;
 import com.irm.myretail.service.myRetailServiceLayer;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
@@ -43,14 +44,11 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/api/myRetail")
 public class myRetailController {
     
-    private final myRetailDao dao;
-    private final myRetailServiceLayer service;
+    @Autowired
+    myRetailDao dao;
     
     @Autowired
-    public myRetailController(myRetailDao dao, myRetailServiceLayer service) {
-        this.dao = dao;
-        this.service = service;
-    }
+    myRetailServiceLayer service;
     
     @GetMapping("/products/{id}")
     public ResponseEntity findById(@PathVariable int id) {
@@ -63,30 +61,30 @@ public class myRetailController {
     
     @GetMapping("/products/name/{id}")
     public ResponseEntity<String> findProductName(@PathVariable int id) {
-        String result = dao.findProductName(id);
-        if (result == null) {
-            return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+        try {
+            String result = service.findProductName(id);
+            return ResponseEntity.ok(result);
+        } catch (ProductNotFoundException ex) {
+            return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(result);
     }
     
     @PutMapping("/products/{id}")
     public ResponseEntity update(@PathVariable int id, @RequestBody Product product) {
-        ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
-        if (id != product.getId()) {
-            response = new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
-        } else {
-            response = new ResponseEntity(HttpStatus.NO_CONTENT);
+        ResponseEntity response = new ResponseEntity(HttpStatus.NO_CONTENT);     
+        try {
+            service.update(product);
+            return response;
+        } catch (ProductNotFoundException ex) {
+            return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
-        dao.update(product);
-        return response;
     }
     
-    // Getting project from external API
+    // Getting product from "external API"
     @GetMapping(value = "/product")
     public Product getProduct() {
         Price price = new Price();
-        price.setValue("16.25");
+        price.setValue(new BigDecimal("16.25"));
         price.setCurrencyCode("USD");
         return new Product(1, "Water Bottle", price);
     }

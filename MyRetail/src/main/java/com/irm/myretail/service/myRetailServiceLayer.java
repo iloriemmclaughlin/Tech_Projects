@@ -7,7 +7,7 @@
 package com.irm.myretail.service;
 
 import com.irm.myretail.exceptions.ProductNotFoundException;
-import com.irm.myretail.models.Product;
+import com.irm.myretail.entities.Product;
 
 /**
  *@author Iloriem McLaughlin

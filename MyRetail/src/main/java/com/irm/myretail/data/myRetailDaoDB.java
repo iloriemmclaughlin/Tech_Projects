@@ -5,16 +5,22 @@
  */
 package com.irm.myretail.data;
 
-import com.irm.myretail.models.Price;
-import com.irm.myretail.models.Product;
+import com.irm.myretail.entities.Price;
+import com.irm.myretail.entities.Product;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Iloriem McLaughlin email: iloriem.pena@gmail.com date: 3/12/2022
@@ -23,21 +29,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class myRetailDaoDB implements myRetailDao {
 
-    private final JdbcTemplate jdbcTemplate;
-
     @Autowired
-    public myRetailDaoDB(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    JdbcTemplate jdbc;
 
     @Override
     public Product findById(int id) {
-        final String sql = "SELECT * FROM product WHERE id = ?;";
         try {
-            Product product = jdbcTemplate.queryForObject(sql, new ProductMapper(), id);
+            final String sql = "SELECT * FROM product WHERE id = ?;";
+            Product product = jdbc.queryForObject(sql, new ProductMapper(), id);
             product.setPrice(getPriceForProduct(id));
             return product;
-        } catch(EmptyResultDataAccessException ex) {
+        } catch (EmptyResultDataAccessException ex) {
             return null;
         }
 
@@ -47,16 +49,20 @@ public class myRetailDaoDB implements myRetailDao {
         final String sql = "SELECT c.*, p.value FROM currency c "
                 + "JOIN product_currency pc ON pc.currencyId = c.id "
                 + "JOIN product p ON pc.productId = p.id WHERE pc.currencyId = 1 AND pc.productId = ?;";
-        return jdbcTemplate.queryForObject(sql, new PriceMapper(), id);
+        return jdbc.queryForObject(sql, new PriceMapper(), id);
     }
 
     @Override
     public String findProductName(int id) {
         final String sql = "SELECT * FROM product WHERE id = ?;";
-        Product product = jdbcTemplate.queryForObject(sql, new ProductMapper(), id);
-        product.setPrice(getPriceForProduct(id));
-        String result = product.getName();
-        return result;
+        try {
+            Product product = jdbc.queryForObject(sql, new ProductMapper(), id);
+            product.setPrice(getPriceForProduct(id));
+            String result = product.getName();
+            return result;
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        }
     }
 
     @Override
@@ -65,7 +71,39 @@ public class myRetailDaoDB implements myRetailDao {
         final String sql = "UPDATE product SET "
                 + "value = ? "
                 + "WHERE id = ?;";
-        jdbcTemplate.update(sql, price.getValue(), product.getId());
+        jdbc.update(sql, price.getValue(), product.getId());
+    }
+
+    @Override
+    @Transactional
+    public Product addProduct(Product product) {
+        final String sql = "INSERT INTO product(id, name) VALUES (?,?);";
+        try {
+            jdbc.update(sql,
+                product.getId(),
+                product.getName());
+        product.setPrice(getPriceForProduct(product.getId()));
+        return product;
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        }
+        
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        final String sql = "SELECT * FROM product;";
+        return jdbc.query(sql, new ProductMapper());
+    }
+
+    @Override
+    @Transactional
+    public void deleteProduct(int id) {
+        final String DELETE_PRODUCT_CURRENCY = "DELETE FROM product_currency WHERE productId = ?;";
+        jdbc.update(DELETE_PRODUCT_CURRENCY, id);
+
+        final String sql = "DELETE FROM product WHERE id = ?;";
+        jdbc.update(sql, id);
     }
 
     private static final class ProductMapper implements RowMapper<Product> {
@@ -84,7 +122,7 @@ public class myRetailDaoDB implements myRetailDao {
         @Override
         public Price mapRow(ResultSet rs, int index) throws SQLException {
             Price price = new Price();
-            price.setValue(rs.getString("value"));
+            price.setValue(rs.getBigDecimal("value"));
             price.setCurrencyCode(rs.getString("code"));
             return price;
         }
