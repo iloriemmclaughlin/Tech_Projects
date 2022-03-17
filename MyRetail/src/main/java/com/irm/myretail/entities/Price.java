@@ -26,10 +26,6 @@ public class Price {
         this.currencyCode = currencyCode;
     }
     
-    public Price(BigDecimal value, String currencyCode) {
-        
-    }
-
     public BigDecimal getValue() {
         return value;
     }
