@@ -54,8 +54,8 @@ public class myRetailDaoDB implements myRetailDao {
 
     @Override
     public String findProductName(int id) {
-        final String sql = "SELECT * FROM product WHERE id = ?;";
         try {
+            final String sql = "SELECT * FROM product WHERE id = ?;";
             Product product = jdbc.queryForObject(sql, new ProductMapper(), id);
             product.setPrice(getPriceForProduct(id));
             String result = product.getName();
@@ -72,38 +72,6 @@ public class myRetailDaoDB implements myRetailDao {
                 + "value = ? "
                 + "WHERE id = ?;";
         jdbc.update(sql, price.getValue(), product.getId());
-    }
-
-    @Override
-    @Transactional
-    public Product addProduct(Product product) {
-        final String sql = "INSERT INTO product(id, name) VALUES (?,?);";
-        try {
-            jdbc.update(sql,
-                product.getId(),
-                product.getName());
-        product.setPrice(getPriceForProduct(product.getId()));
-        return product;
-        } catch (EmptyResultDataAccessException ex) {
-            return null;
-        }
-        
-    }
-
-    @Override
-    public List<Product> getAllProducts() {
-        final String sql = "SELECT * FROM product;";
-        return jdbc.query(sql, new ProductMapper());
-    }
-
-    @Override
-    @Transactional
-    public void deleteProduct(int id) {
-        final String DELETE_PRODUCT_CURRENCY = "DELETE FROM product_currency WHERE productId = ?;";
-        jdbc.update(DELETE_PRODUCT_CURRENCY, id);
-
-        final String sql = "DELETE FROM product WHERE id = ?;";
-        jdbc.update(sql, id);
     }
 
     private static final class ProductMapper implements RowMapper<Product> {

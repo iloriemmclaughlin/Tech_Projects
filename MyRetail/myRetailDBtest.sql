@@ -15,7 +15,6 @@ CREATE TABLE product(
     value DECIMAL(15,2)
 );
     
-
 CREATE TABLE product_currency(
 	productId INT,
     currencyId INT,
@@ -23,3 +22,12 @@ CREATE TABLE product_currency(
     FOREIGN KEY (productId) REFERENCES product(id),
     FOREIGN KEY (currencyId) REFERENCES currency(id)
 );
+
+INSERT INTO product(id, name, value) VALUES
+	(123, "Test Product", 12.00);
+
+INSERT INTO currency(code, exchangeRate) VALUES
+	("USD", 1.000000);
+    
+INSERT INTO product_currency(productId, currencyId) VALUES
+	(123, 1);

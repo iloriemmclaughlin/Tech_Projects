@@ -45,27 +45,5 @@ public interface myRetailDao {
      * @param product updates product price with associated id information
      */
     void update(Product product);
-    
-    /**
-     * Adds given product in the database
-     * 
-     * @param product product to be added to the database
-     * @return the Product object
-     */
-    Product addProduct(Product product);
-    
-    /**
-     * Returns list of all products from the database
-     * 
-     * @return list of all products from the database
-     */
-    List<Product> getAllProducts();
-    
-    /**
-     * Deletes product from database
-     * 
-     * @param id deletes product with associated id from the database
-     */
-    void deleteProduct(int id);
 
 }

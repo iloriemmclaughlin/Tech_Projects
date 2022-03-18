@@ -46,10 +46,7 @@ public class myRetailDaoDBTest {
     
     @Before
     public void setUp() {
-        List<Product> products = dao.getAllProducts();
-        for (Product product : products) {
-            dao.deleteProduct(product.getId());
-        }
+
     }
     
     @After
@@ -61,15 +58,15 @@ public class myRetailDaoDBTest {
      */
     @Test
     public void testFindById() {
+        BigDecimal value = BigDecimal.valueOf(12.00);
         Price price = new Price();
-        price.setValue(new BigDecimal("3.50"));
+        price.setValue(value.setScale(2));
         price.setCurrencyCode("USD");
         
         Product product = new Product();
-        product.setId(1);
-        product.setName("Doritos");
+        product.setId(123);
+        product.setName("TestProduct");
         product.setPrice(price);
-        dao.addProduct(product);
         
         Product fromDao = dao.findById(product.getId());
         
@@ -81,19 +78,19 @@ public class myRetailDaoDBTest {
      */
     @Test
     public void testFindProductName() {
+        BigDecimal value = BigDecimal.valueOf(12.00);
         Price price = new Price();
-        price.setValue(new BigDecimal("3.50"));
+        price.setValue(value.setScale(2));
         price.setCurrencyCode("USD");
         
         Product product = new Product();
-        product.setId(1);
-        product.setName("Doritos");
+        product.setId(123);
+        product.setName("TestProduct");
         product.setPrice(price);
-        dao.addProduct(product);
         
         String fromDao = dao.findProductName(product.getId());
         
-        assertEquals(product, fromDao);
+        assertEquals(product.getName(), fromDao);
     }
 
     /**
@@ -101,21 +98,22 @@ public class myRetailDaoDBTest {
      */
     @Test
     public void testUpdate() {
+        BigDecimal value = BigDecimal.valueOf(12.00);
         Price price = new Price();
-        price.setValue(new BigDecimal("3.50"));
+        price.setValue(value.setScale(2));
         price.setCurrencyCode("USD");
         
         Product product = new Product();
-        product.setId(1);
-        product.setName("Doritos");
+        product.setId(123);
+        product.setName("TestProduct");
         product.setPrice(price);
-        dao.addProduct(product);
         
         Product fromDao = dao.findById(product.getId());
         
         assertEquals(product, fromDao);
         
-        price.setValue(new BigDecimal("5.00"));
+        BigDecimal value2 = BigDecimal.valueOf(15.00);
+        price.setValue(value2);
         
         dao.update(product);
         
