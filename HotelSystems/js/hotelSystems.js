@@ -6,6 +6,8 @@ while (messages.length > 0) {
 };
 
 $(document).ready(function () {
+
+    // the following code loads messages from JSON file
     $.getJSON('Message.json', function (data) {
         var message_title = '';
         $.each(data, function (i, item) {
@@ -20,11 +22,11 @@ $(document).ready(function () {
 
         })
     })
+
+    // the following code loads company information from JSON file
     $.getJSON('Companies.json', function (data) {
         var company_name = '';
-
         $.each(data, function (i, item) {
-            console.log(item.id, item.company, item.city, item.timezone)
 
             const company = {};
             company.id = item.id;
@@ -35,12 +37,11 @@ $(document).ready(function () {
 
             company_name += "<option value ='" + item.id + "'>" + item.company + "</option>"
             $("#company").html(company_name)
-            //company_name += item.company + " " + item.city + "<br> <br>"
-
-            //$('#company_name').html(company_name)
 
         })
     })
+
+    // the following code loads guest information from JSON file
     $.getJSON('Guests.json', function (data) {
         var guest_name = '';
         $.each(data, function (i, item) {
@@ -60,54 +61,36 @@ $(document).ready(function () {
 
         })
     })
-
-
 });
 
+// function for user to create their own message
 function createMessage() {
     var message_title = '';
     var title = $("#title").val();
     var description = $("#description").val();
-    console.log(title);
-    console.log(description);
 
     const newMessage = {};
     newMessage.title = title;
     newMessage.description = description;
     messages.push(newMessage);
 
-
     for (var i = 0; i < messages.length; i++) {
         message_title += "<option value='" + messages[i].title + "'>" + messages[i].title + "</option>";
         $("#message").html(message_title);
     }
-
-    //const data = JSON.stringify(newMessage);
-    //console.log(data);
-
-    //$.getJSON('Message.json', function (data) {
-    //    data.push(newMessage);
-    //});
 };
 
+// function to generate final message
 function generateMessage() {
     var msgSelected = $("#message").val();
     var guestSelected = parseInt($("#guest").val());
     var companySelected = parseInt($("#company").val());
-    console.log(msgSelected + ' ' + guestSelected + ' ' + companySelected);
-    console.log(messages);
-    console.log(guests);
-    console.log(companies);
 
     const selectedMessage = messages.find(({ title }) => title === msgSelected);
     const selectedGuest = guests.find(({ id }) => id === guestSelected);
     const selectedCompany = companies.find(({ id }) => id === companySelected);
-    console.log(selectedMessage);
-    console.log(selectedGuest.firstName);
-    console.log(selectedGuest.reservation.roomNumber);
-    console.log(selectedCompany.company);
 
-    // function to find time of day
+    // the following code finds the time of day for final message
     var today = new Date();
     var time = today.getHours();
     var timeOfDay;
@@ -118,8 +101,6 @@ function generateMessage() {
     } else {
         timeOfDay = "Good Evening";
     }
-    console.log(timeOfDay);
-
 
     // The following code is to replace placeholders within message but does not function properly yet
     //var newMessage = selectedMessage.description.replace("|timeOfDay|", timeOfDay);
@@ -135,7 +116,6 @@ function generateMessage() {
     //    }
 
     //})
-    //console.log(selectedMessage.description);
 
     var newMessage = selectedMessage.description.replace("|timeOfDay|", timeOfDay).replace("|firstName|", selectedGuest.firstName).replace
         ("|company|", selectedCompany.company).replace("|roomNumber|", selectedGuest.reservation.roomNumber);
