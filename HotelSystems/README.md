@@ -20,12 +20,10 @@
 
 <p align="center">
     Various images of project.
-
+</p>
     <img src="images/generatedMessage.jpg">
     <img src="images/creatingHelpMessage.jpg">
     <img src="images/newMessageOutput.jpg">
-
-</p>
 
 <p align="center">
     Design Decisions:
