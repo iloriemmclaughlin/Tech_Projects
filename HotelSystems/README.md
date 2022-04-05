@@ -19,21 +19,25 @@
 </p>
 
 <p align="center">
+    Design Decisions:
+    I chose to design the project using HTML and JavaScript because it appeared to be the simplest approach with the amount of time given. I knew I would be able to
+    deliver a working project if done this way. If given more time, I would write the program using Java langage and in NetBeans IDE as that is what I'm most familar with.
+</p>
+
+<p align="center">
+    Correctness of Program:
+    If given more time, I would've included validations and checked for errors. I would've included code or function to replace placeholders appropriately when user
+    creates a new message. If given more time, I would've made the HTML page look much cleaner and more desirable from a user's perspective.
+</p>
+
+<p align="center">
     Various images of project.
 </p>
     <img src="images/generatedMessage.jpg">
     <img src="images/creatingHelpMessage.jpg">
     <img src="images/newMessageOutput.jpg">
 
-<p align="center">
-    Design Decisions:
-    I chose to design the project using HTML and JavaScript because it appeared to be the simplest approach with the amount of time given. I knew I would be able to
-    deliver a working project if done this way. If given more time, I would write the program using Java langage and in NetBeans IDE as that is what I'm most familar with.
 
-    Correctness of Program:
-    If given more time, I would've included validations and checked for errors. I would've included code or function to replace placeholders appropriately when user
-    creates a new message. If given more time, I would've made the HTML page look much cleaner and more desirable from a user's perspective.
-</p>
 
 
 
