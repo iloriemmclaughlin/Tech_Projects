@@ -9,10 +9,12 @@
     Generate a message depending on selections made by user. User is able to create their own message and use it as template. 
 </p>
 
+<p align="center">
+    IMPORTANT -- IF YOU DOWNLOADED PROJECT FROM ZIP FILE, CHANGE homeSystems.js.txt TO A JAVASCRIPT FILE BEFORE CONTINUING.
+</p>
 
 <p align="center">
     How To Run Program:
-    IMPORTANT -- If you downloaded project from zip file, change homeSystems.js.txt to a javascript file before connecting to server.
     Connect to a local server and open HTML page on web browser.
     -- For example, in my command prompt, I located the folder in which HTML file is located, then in the command prompt entered 'http-server' to connect to my localhost:8080
     -- Then I used the chrome web browser and entered localhost:8080 and navigated to the hotelSystems.html to view the page or entered localhost:8080/hotelSystems.html
