@@ -21,10 +21,7 @@
 <p align="center">
     Various images of project.
 
-    Generated Message Example
     <img src="images/generatedMessage.jpg">
-
-    Creating New Message and Output
     <img src="images/creatingHelpMessage.jpg">
     <img src="images/newMessageOutput.jpg">
 
