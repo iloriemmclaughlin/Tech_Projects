@@ -1,0 +1,10 @@
+[
+  {
+    "title": "Welcome",
+    "description": "|timeOfDay| |firstName|, and welcome to |company|! Room |roomNumber| is now ready for you. Enjoy your stay, and let us know if you need anything."
+  },
+  {
+    "title": "Goodbye",
+    "description": "Thank you for staying with us. We hope to see you again soon!"
+  }
+]
